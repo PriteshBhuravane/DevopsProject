@@ -24,9 +24,7 @@ pipeline {
 
     stage('Run App') {
       steps {
-        sh 'npm install pm2'
-        sh './node_modules/.bin/pm2 delete all || true'
-        sh './node_modules/.bin/pm2 start index.js --name node-app'
+        sh 'node index.js'
       }
     }
   }
