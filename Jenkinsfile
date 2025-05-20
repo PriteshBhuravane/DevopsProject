@@ -16,23 +16,26 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
+    stage('Build Docker Image') {
       steps {
-        sh 'npm install'
+        sh 'docker build -t node-docker-app .'
       }
     }
 
-    stage('Run App') {
+    stage('Run Docker Container') {
       steps {
-        sh 'npm install pm2'
-        sh './node_modules/.bin/pm2 delete all || true'
-        sh './node_modules/.bin/pm2 start index.js --name node-app'
-        echo '🌐 Visit your app at: http://localhost:3002'
+        // Remove if already running
+        sh 'docker rm -f node-docker-app || true'
+
+        // Run the container
+        sh 'docker run -d --name node-docker-app -p 3002:3002 node-docker-app'
+
+        echo '✅ Server is running inside Docker container at: http://localhost:3002'
       }
     }
   }
 
   triggers {
-    pollSCM('* * * * *')
+    pollSCM('* * * * *') // Poll GitHub every 1 min
   }
 }
