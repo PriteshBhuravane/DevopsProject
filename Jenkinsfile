@@ -28,7 +28,7 @@ pipeline {
         sh 'docker rm -f node-docker-app || true'
 
         // Run the container
-        sh 'docker run -d --name node-docker-app -p 3002:3002 node-docker-app'
+        sh 'docker run -d --name node-docker-app -p 3002:3000 node-docker-app'
 
         echo '✅ Server is running inside Docker container at: http://localhost:3002'
       }
