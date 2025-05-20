@@ -23,12 +23,13 @@ pipeline {
     }
 
     stage('Start Application') {
-      steps {
-        sh 'npm install pm2 -g'
-        sh 'pm2 delete all || true'
-        sh 'pm2 start index.js --name node-app'
-      }
-    }
+  steps {
+    sh 'npm install pm2' // remove -g
+    sh './node_modules/.bin/pm2 delete all || true'
+    sh './node_modules/.bin/pm2 start index.js --name node-app'
+  }
+}
+
   }
 
   triggers {
