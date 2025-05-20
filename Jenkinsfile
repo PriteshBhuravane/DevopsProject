@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'nodeHome'
+    nodejs 'nodeHome' // Node.js installation name in Jenkins
   }
 
   environment {
@@ -10,9 +10,9 @@ pipeline {
   }
 
   stages {
-    stage('Clone from GitHub') {
+    stage('Clone') {
       steps {
-        git credentialsId: 'github-token', url: 'https://github.com/PriteshBhuravane/DevopsProject.git', branch: 'master'
+        git url: 'https://github.com/PriteshBhuravane/DevopsProject.git', branch: 'main'
       }
     }
 
@@ -22,17 +22,16 @@ pipeline {
       }
     }
 
-    stage('Start Application') {
-  steps {
-    sh 'npm install pm2' // remove -g
-    sh './node_modules/.bin/pm2 delete all || true'
-    sh './node_modules/.bin/pm2 start index.js --name node-app'
-  }
-}
-
+    stage('Run App') {
+      steps {
+        sh 'npm install pm2'
+        sh './node_modules/.bin/pm2 delete all || true'
+        sh './node_modules/.bin/pm2 start index.js --name node-app'
+      }
+    }
   }
 
   triggers {
-    githubPush()  // works with GitHub webhook
+    pollSCM('* * * * *')  // Poll GitHub every 1 minute
   }
 }
