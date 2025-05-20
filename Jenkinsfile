@@ -2,7 +2,7 @@ pipeline {
   agent any
 
   tools {
-    nodejs 'nodeHome' // Node.js installation name in Jenkins
+    nodejs 'nodeHome'
   }
 
   environment {
@@ -24,12 +24,15 @@ pipeline {
 
     stage('Run App') {
       steps {
-        sh 'node index.js'
+        sh 'npm install pm2'
+        sh './node_modules/.bin/pm2 delete all || true'
+        sh './node_modules/.bin/pm2 start index.js --name node-app'
+        echo '🌐 Visit your app at: http://localhost:3002'
       }
     }
   }
 
   triggers {
-    pollSCM('* * * * *')  // Poll GitHub every 1 minute
+    pollSCM('* * * * *')
   }
 }
